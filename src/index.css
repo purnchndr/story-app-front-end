@@ -1,0 +1,33 @@
+:root {
+  --red-color: #ff7373;
+  --blue-color: #73abff;
+  --white-color: #ffffff;
+  --dark-color: #3a3a3a;
+  --black-color: #000;
+  --light-dark-color: #8e8e8e;
+  --shadow-color: #000000dc;
+  --green-color: #4d9336dc;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  font-optical-sizing: auto;
+  width: 100%;
+}
+
+button {
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 1rem;
+  padding: 8px 12px;
+  margin: 0 10px;
+  border: none;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+a {
+  text-decoration: none;
+}

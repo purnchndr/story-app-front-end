@@ -1,0 +1,77 @@
+.splashScreen {
+  height: 100%;
+  width: 100%;
+  /* background-color: var(--shadow-color); */
+  background-color: var(--black-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.breathingButton {
+  width: 400px;
+  margin: 50px auto;
+  -webkit-animation: breathing 1s ease-out infinite normal;
+  animation: breathing 1s ease-out infinite normal;
+  -webkit-font-smoothing: antialiased;
+  text-align: center;
+}
+
+.text {
+  font-size: 55px;
+  font-weight: bold;
+  color: var(--white-color);
+  filter: drop-shadow(2px 2px 5px rgba(255, 255, 255, 0.5));
+}
+
+@-webkit-keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.6);
+    transform: scale(0.6);
+    color: aqua;
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.6);
+    transform: scale(0.6);
+  }
+
+  100% {
+    -webkit-transform: scale(0.6);
+    transform: scale(0.6);
+  }
+}
+
+@keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.6);
+    -ms-transform: scale(0.6);
+    transform: scale(0.6);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.6);
+    -ms-transform: scale(0.6);
+    transform: scale(0.6);
+  }
+
+  100% {
+    -webkit-transform: scale(0.6);
+    -ms-transform: scale(0.6);
+    transform: scale(0.6);
+  }
+}

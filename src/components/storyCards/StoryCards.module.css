@@ -1,0 +1,107 @@
+.storyCardsBox {
+  margin: 30px 5px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid black;
+}
+.heading h1 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.storyCards {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.storyCard {
+  width: 257px;
+  height: 460px;
+  background-size: contain;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 1rem;
+  flex-direction: column;
+  margin: 25px 15px;
+  box-shadow: 0 0 10px black;
+}
+
+.StoryCardBox {
+  position: relative;
+  cursor: pointer;
+}
+.editBox {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 2rem;
+  font-size: 14px;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  width: 80px !important;
+  min-width: min-content;
+  padding: 3px 5px;
+}
+
+.storyCardTexts {
+  background: linear-gradient(0deg, #000000 59.6%, rgba(0, 0, 0, 0) 102.31%);
+  min-height: 142px;
+  color: var(--white-color);
+  border-radius: 0 0 1rem 1rem;
+  padding: 20px 15px;
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
+}
+.storyCardBlank {
+  background: linear-gradient(180deg, #000000 59.6%, rgba(0, 0, 0, 0) 102.31%);
+  border-radius: 1rem 1rem 0 0;
+  min-height: 142px;
+}
+.storyCardTexts h1 {
+  font-weight: bold;
+  font-size: 20px;
+  margin: 5px 0;
+}
+
+.storyCardTexts p {
+  font-weight: bold;
+  font-size: 10px;
+  margin: 0;
+}
+
+.noStory {
+  font-weight: bold;
+  font-size: 30px;
+  color: var(--light-dark-color);
+  text-align: center;
+  margin: 80px auto;
+}
+
+.seeBtn {
+  text-align: center;
+}
+
+.seeBtn button {
+  background-color: var(--red-color);
+  color: var(--white-color);
+}
+
+@media screen and (max-width: 450px) {
+  .storyCard {
+    width: 400px;
+    height: 584px;
+  }
+  .storyCards {
+    justify-content: center;
+  }
+}

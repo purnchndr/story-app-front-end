@@ -1,0 +1,152 @@
+.addStory {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
+
+.selectors {
+  display: flex;
+  align-items: center;
+}
+
+.numBox {
+  box-shadow: 0px 4px 15px 0px #0000001a;
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  margin: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.numBox p {
+  font-size: 15px;
+  font-weight: bold;
+}
+.delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 5px;
+}
+
+.buttons button {
+  color: var(--white-color);
+}
+
+.pre {
+  background-color: var(--green-color);
+}
+
+.next {
+  background-color: var(--blue-color);
+}
+.post {
+  background-color: var(--red-color);
+}
+
+.inputs {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+.input label {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input input,
+select,
+textarea,
+option {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: 1.5px solid var(--dark-color);
+  width: 270px;
+  margin: 10px 25px;
+}
+
+.inputBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+textarea {
+  height: 100px;
+}
+select {
+  /* width: 312px !important; */
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+@media screen and (max-width: 450px) {
+  .inputBox {
+    flex-direction: row;
+    width: 100%;
+  }
+  .selectors {
+    flex-direction: column;
+  }
+  .input {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    margin: 7px 0;
+  }
+
+  .input input,
+  select,
+  textarea,
+  option {
+    width: 70%;
+    margin: 10px 5px;
+  }
+  .numBox {
+    width: 45px;
+    height: 60px;
+    padding: 5px 2px;
+  }
+  .numBox p {
+    text-align: center;
+    width: 100%;
+  }
+  .inputs {
+    width: 70%;
+    padding: 0 0 0 10px;
+  }
+  .navigationBtns {
+    display: none;
+  }
+  .buttons {
+    margin: 10px 0;
+    font-size: 12px;
+    font-weight: bold;
+  }
+}
