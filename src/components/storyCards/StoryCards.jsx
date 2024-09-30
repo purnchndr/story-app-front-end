@@ -9,8 +9,6 @@ import axios from 'axios';
 
 function StoryCards({ about }) {
   const token = localStorage.getItem('token');
-  console.log(about);
-
   if (about === 'all') return null;
 
   const [more, setMore] = useState(4);
@@ -39,7 +37,6 @@ function StoryCards({ about }) {
         setLoader(true);
         let config;
         if (mystory) {
-          console.log(mystory);
           config = {
             method: 'get',
             maxBodyLength: Infinity,
@@ -66,9 +63,7 @@ function StoryCards({ about }) {
         }
 
         const res = await axios.request(config);
-        console.log(res.data);
         setStories(res?.data?.story || []);
-        // setLoader(false);
       } catch (err) {
         console.error(err);
         const msg = err?.response?.data?.message || err.message;
@@ -116,7 +111,6 @@ function StoryCards({ about }) {
 }
 
 function StoryCard({ data, editEnable, handelShowStory }) {
-  // console.log(data);
   const { image, heading, description } = data.cards[0];
   const [edit, setEdit] = useState(false);
   const handelEdit = () => setEdit(c => !c);

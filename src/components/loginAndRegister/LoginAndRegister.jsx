@@ -40,12 +40,9 @@ function LoginAndRegister({ closeModal, auth = false }) {
         };
       }
       const res = await axios.request(config);
-      console.log(res);
       const data = res.data;
       localStorage.setItem('token', data.token);
-      // localStorage.setItem('username', data.username);
       localStorage.setItem('user', JSON.stringify(data.user));
-      console.log('Logged in');
       closeModal();
       navigate('/your-stories');
     } catch (err) {

@@ -29,8 +29,6 @@ function TopicCard({ data, selected, handelSelected, num }) {
   );
 }
 
-//['food', 'health', 'movie', 'education']
-
 function TopicCards({ selected, setSelected }) {
   const handelSelected = num => {
     if (selected.includes(num)) {

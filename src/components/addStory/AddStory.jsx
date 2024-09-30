@@ -63,7 +63,6 @@ function AddStory({ data, editEnable, closeModal }) {
       if (!category) return sendMessage(`Select Category in Slide ${1}`, 0);
       let config;
       if (editEnable) {
-        console.log('Updating');
         config = {
           method: 'patch',
           maxBodyLength: Infinity,
@@ -75,7 +74,6 @@ function AddStory({ data, editEnable, closeModal }) {
           data: { cards, category },
         };
       } else {
-        console.log('submitting');
         config = {
           method: 'post',
           maxBodyLength: Infinity,
@@ -88,7 +86,6 @@ function AddStory({ data, editEnable, closeModal }) {
         };
       }
       const res = await axios.request(config);
-      console.log(res);
       navigate('/your-stories');
       closeModal();
       toast.success(res?.data?.message || 'Success');

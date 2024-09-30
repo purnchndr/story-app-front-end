@@ -29,7 +29,6 @@ function StoryPage() {
         };
         const res = await axios.request(config);
         setStory(res.data?.story || []);
-        console.log(res);
         const data = res.data;
       } catch (err) {
         console.error(err);

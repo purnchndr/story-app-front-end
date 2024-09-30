@@ -2,7 +2,6 @@ import style from './Modal.module.css';
 
 function Modal({ children, close, text }) {
   const closeModal = () => {
-    console.log('closed');
     close();
   };
   children = children ? children : <h1>No Content</h1>;

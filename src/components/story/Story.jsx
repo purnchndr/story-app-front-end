@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import style from './Story.module.css';
 import LoginAndRegister from '../loginAndRegister/LoginAndRegister';
 import Modal from '../modal/Modal';
@@ -35,7 +35,6 @@ function Story({ data, handelClose }) {
         data: {},
       };
       const res = await axios.request(config);
-      console.log(res);
       localStorage.setItem('user', JSON.stringify(res.data.user));
     } catch (err) {
       console.error(err);
