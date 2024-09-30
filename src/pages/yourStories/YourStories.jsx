@@ -1,13 +1,19 @@
+import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import StoryCards from '../../components/storyCards/StoryCards';
 import style from './YourStories.module.css';
+import { useEffect } from 'react';
 function YourStories() {
-  const user = localStorage.getItem('token');
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  useEffect(() => {
+    if (!token) navigate('/');
+  });
   return (
     <>
       <Header />
       <div className={style.homepage}>
-        {user && <StoryCards about='mystories' />}
+        {token && <StoryCards about='mystories' />}
       </div>
     </>
   );

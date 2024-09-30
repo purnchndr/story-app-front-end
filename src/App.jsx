@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Bookmarks from './pages/bookmarks/Bookmarks';
 import YourStories from './pages/yourStories/YourStories';
+import StoryPage from './pages/storyPage/StoryPage';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: '/your-stories',
     element: <YourStories />,
+  },
+  {
+    path: '/:id',
+    element: <StoryPage />,
   },
 
   {

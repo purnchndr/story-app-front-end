@@ -19,7 +19,8 @@
 .storyCard {
   width: 257px;
   height: 460px;
-  background-size: contain;
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: space-between;
   border-radius: 1rem;

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import style from './Header.module.css';
 import { useState } from 'react';
 import Modal from '../modal/Modal';
@@ -9,6 +9,7 @@ function Header() {
   const [profile, setProfile] = useState(false);
   const [modal, setModal] = useState(false);
   const [mobileView, setMobileView] = useState(false);
+  const navigate = useNavigate();
 
   const handelLogin = () => setModal('login');
   const handelRegister = () => setModal('register');
@@ -24,11 +25,14 @@ function Header() {
   };
 
   const token = localStorage.getItem('token');
-  const name = 'Purnachandra';
+  let name = localStorage.getItem('user');
+  name = (name && JSON.parse(name)?.username) || '';
 
   const logout = () => {
     localStorage.removeItem('token');
-    setProfileView();
+    localStorage.removeItem('user');
+    setProfileView(false);
+    navigate('/your-stories');
   };
 
   return (
@@ -62,13 +66,15 @@ function Header() {
               name={name}
             />
           )}
-          <img
-            width='30px'
-            src='/img/menu.png'
-            alt='menu'
-            onClick={setProfileView}
-            className={style.menuBtn0}
-          />
+          {token && (
+            <img
+              width='30px'
+              src='/img/menu.png'
+              alt='menu'
+              onClick={setProfileView}
+              className={style.menuBtn0}
+            />
+          )}
           <img
             className={style.menuBtn1}
             width='30px'
@@ -96,6 +102,9 @@ function DesktopViewBtns({
     <>
       {token ? (
         <div className={style.profile} style={null}>
+          <Link to='/your-stories'>
+            <button className={style.bookmarks}>Your Stories</button>
+          </Link>
           <Link to='/bookmarks'>
             <button className={style.bookmarks}>
               <img width='15px' src='/img/bookmark.png' /> Bookmarks
@@ -190,7 +199,7 @@ function MobileViewBtns({
   );
 }
 
-function ModalBox({ modal, closeModal }) {
+function ModalBox({ modal, closeModal, setToken }) {
   return (
     <>
       {modal === 'login' && (
@@ -204,7 +213,7 @@ function ModalBox({ modal, closeModal }) {
         </Modal>
       )}
       {modal === 'add' && (
-        <Modal text={'Test heading'} close={closeModal}>
+        <Modal text={'Add Story'} close={closeModal}>
           <AddStory closeModal={closeModal} />
         </Modal>
       )}

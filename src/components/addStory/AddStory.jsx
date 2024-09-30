@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react';
 import style from './AddStory.module.css';
 import { toast } from 'react-toastify';
 import SplashScreen from '../splashScreen/SplashScreen';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function AddStory({ data, editEnable, closeModal }) {
   const [selected, setSelected] = useState(0);
-  const slide = data || [{}, {}, {}];
-  const [slides, setSlides] = useState(slide);
+  const [slides, setSlides] = useState(data?.cards || [{}, {}, {}]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   const addSlide = () => {
     setSlides(c => [...c, {}]);
@@ -34,31 +37,68 @@ function AddStory({ data, editEnable, closeModal }) {
       return data;
     });
   };
-  const handelPost = () => {
-    const sendMessage = (msg, i) => {
-      setError(msg);
-      setSelected(i);
-      toast.error(msg);
-    };
-    for (let [i, d] of slides.entries()) {
-      const { heading, desc, category, url } = d;
-      if (!heading) return sendMessage(`Enter Heading in Slide ${i + 1}`, i);
-      if (!desc) return sendMessage(`Enter Description in Slide ${i + 1}`, i);
-      if (!category) return sendMessage(`Select Category in Slide ${i + 1}`, i);
-      if (!url) return sendMessage(`Enter Image Url in Slide ${i + 1}`, i);
-    }
-
-    if (editEnable) {
-      console.log('submitted');
-
-      // setLoading(true);
-      toast.success('Story Updated ' + data._id);
-    } else {
-      console.log('submitted');
+  const handelPost = async () => {
+    try {
+      const sendMessage = (msg, i) => {
+        setError(msg);
+        setSelected(i);
+        toast.error(msg);
+      };
+      for (let [i, d] of slides.entries()) {
+        const { heading, description, category, image } = d;
+        if (!heading) return sendMessage(`Enter Heading in Slide ${i + 1}`, i);
+        if (!description)
+          return sendMessage(`Enter Description in Slide ${i + 1}`, i);
+        if (!image) return sendMessage(`Enter Image Url in Slide ${i + 1}`, i);
+      }
       setLoading(true);
-      toast.success('Story Published');
+      const cards = slides.map((c, i) => {
+        return {
+          heading: c.heading,
+          image: c.image,
+          description: c.description,
+        };
+      });
+      const category = slides[0].category;
+      if (!category) return sendMessage(`Select Category in Slide ${1}`, 0);
+      let config;
+      if (editEnable) {
+        console.log('Updating');
+        config = {
+          method: 'patch',
+          maxBodyLength: Infinity,
+          url: `${window.backendUrl}api/story/${data._id}/`,
+          headers: {
+            token,
+            'Content-Type': 'application/json',
+          },
+          data: { cards, category },
+        };
+      } else {
+        console.log('submitting');
+        config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: window.backendUrl + 'api/story/',
+          headers: {
+            token,
+            'Content-Type': 'application/json',
+          },
+          data: { cards, category },
+        };
+      }
+      const res = await axios.request(config);
+      console.log(res);
+      navigate('/your-stories');
+      closeModal();
+      toast.success(res?.data?.message || 'Success');
+    } catch (err) {
+      console.error(err);
+      const msg = err?.response?.data?.message || err.message;
+      setError(msg);
+    } finally {
+      setLoading(false);
     }
-    closeModal();
   };
 
   return (
@@ -83,6 +123,7 @@ function AddStory({ data, editEnable, closeModal }) {
             sendData={handelData}
             data={slides[selected]}
             key={selected}
+            category={data?.category || ''}
           />
         </div>
 
@@ -138,18 +179,18 @@ function NumberBox({ num, selected, addSlide, handelSelected, handelDelete }) {
   );
 }
 
-function StoryInputs({ sendData, data }) {
+function StoryInputs({ sendData, data, category: cat }) {
   const [heading, setHeading] = useState(data.heading || '');
-  const [desc, setDesc] = useState(data.desc || '');
-  const [url, setUrl] = useState(data.url || '');
-  const [category, setCategory] = useState(data.category || '');
+  const [description, setDescription] = useState(data.description || '');
+  const [image, setUrl] = useState(data.image || '');
+  const [category, setCategory] = useState(cat || '');
 
   const handelHeading = e => setHeading(e.target.value);
-  const handelDesc = e => setDesc(e.target.value);
+  const handelDesc = e => setDescription(e.target.value);
   const handelUrl = e => setUrl(e.target.value);
   const handelCategory = e => setCategory(e.target.value);
-  const handelData = () => sendData({ heading, desc, url, category });
-  useEffect(handelData, [heading, desc, url, category]);
+  const handelData = () => sendData({ heading, description, image, category });
+  useEffect(handelData, [heading, description, image, category]);
 
   return (
     <div className={style.inputs}>
@@ -165,7 +206,7 @@ function StoryInputs({ sendData, data }) {
       <div className={style.input}>
         <label>Description: </label>
         <textarea
-          value={desc}
+          value={description}
           onChange={handelDesc}
           placeholder='Story Description'
         />
@@ -174,7 +215,7 @@ function StoryInputs({ sendData, data }) {
         <label>Image Url: </label>
         <input
           type='url'
-          value={url}
+          value={image}
           onChange={handelUrl}
           placeholder='Add Image Url'
         />
@@ -189,8 +230,8 @@ function StoryInputs({ sendData, data }) {
           <option value=''>Select Category</option>
           <option value='food'>Food</option>
           <option value='health'>Health and Fitness</option>
-          <option value='travel'>travel</option>
-          <option value='movie'>movie</option>
+          <option value='travel'>Travel</option>
+          <option value='movie'>Movie</option>
           <option value='education'>education</option>
         </select>
       </div>

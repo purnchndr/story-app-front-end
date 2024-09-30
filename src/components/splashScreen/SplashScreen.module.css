@@ -1,7 +1,6 @@
 .splashScreen {
-  height: 100%;
+  height: 100vh;
   width: 100%;
-  /* background-color: var(--shadow-color); */
   background-color: var(--black-color);
   display: flex;
   align-items: center;

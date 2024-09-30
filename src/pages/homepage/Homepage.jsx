@@ -5,18 +5,16 @@ import TopicCards from '../../components/topicCard/TopicCard';
 import style from './Homepage.module.css';
 
 function Homepage() {
-  const [selected, setSelected] = useState([0, 1, 2, 3, 4]);
-  const cards = ['all', 'food', 'health', 'movie', 'education'];
-  const user = true;
-
-  console.log(window.images);
+  const [selected, setSelected] = useState([0, 1, 2, 3, 4, 5]);
+  const cards = ['all', 'food', 'health', 'movie', 'education', 'travel'];
+  const token = localStorage.getItem('token');
 
   return (
     <>
       <Header />
       <div className={style.homepage}>
         <TopicCards selected={selected} setSelected={setSelected} />
-        {user && <StoryCards about='mystories' />}
+        {token && <StoryCards about='mystories' />}
         {selected.map(c => (
           <StoryCards about={cards[c]} key={c} />
         ))}

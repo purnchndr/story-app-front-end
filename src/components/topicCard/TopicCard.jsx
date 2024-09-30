@@ -7,6 +7,7 @@ const topics = [
   { text: 'Health and Fitness', image: '/img/health.jpg' },
   { text: 'Movie', image: '/img/movie.jpg' },
   { text: 'Education', image: '/img/education.jpg' },
+  { text: 'Travel', image: '/img/travel.jpg' },
 ];
 
 function TopicCard({ data, selected, handelSelected, num }) {

@@ -2,51 +2,72 @@ import { useEffect, useState } from 'react';
 import style from './Story.module.css';
 import LoginAndRegister from '../loginAndRegister/LoginAndRegister';
 import Modal from '../modal/Modal';
-let images = [
-  'https://images1.wionews.com/images/wion/900x1600/2023/7/6/1688668162918_coffee19001941280.jpg',
-  'https://images1.wionews.com/images/wion/900x1600/2024/9/27/1727422226244_pexelsekaterinabolovtsova5662386.jpg',
-  'https://images1.wionews.com/images/wion/900x1600/2023/7/6/1688668754955_chocolate5514241280.jpg',
-  'https://images1.wionews.com/images/wion/900x1600/2023/7/6/1688668871745_hersheys64929261280.jpg',
-  'https://images1.wionews.com/images/wion/900x1600/2023/7/6/1688669093025_cinnamonsticks58282411280.jpg',
-  'https://images1.wionews.com/images/wion/900x1600/2023/7/6/1688668754955_chocolate5514241280.jpg',
-];
-const story = images.map((c, i) => {
-  return {
-    image: c,
-    heading: 'Test Heading ' + i,
-    desc: i + 'Test description fdjflf fjdfkja f fdkfj lkfjdlkf jkl fa ',
-  };
-});
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
-console.log(story);
-
-function Story({ id, handelClose }) {
+function Story({ data, handelClose }) {
   const [num, setNum] = useState(0);
-
-  const token = localStorage.getItem('token');
+  const [cards, setCards] = useState(data.cards);
   const [login, setLogin] = useState(false);
-
+  const [loader, setLoader] = useState(false);
+  const length = cards.length;
+  const token = localStorage.getItem('token');
+  let user = localStorage.getItem('user');
+  user = user && JSON.parse(user);
   const handelPre = () => setNum(c => (c > 0 ? c - 1 : c));
-  const handelNext = () => setNum(c => (c < story.length - 1 ? c + 1 : c));
-
-  const handelDownload = () => null;
-  const handelLike = () => null;
-  const handelSave = () => null;
+  const handelNext = () => setNum(c => (c < length - 1 ? c + 1 : c));
+  const handelDownload = el => {
+    var data =
+      'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+    el.setAttribute('href', 'data:' + data);
+    el.setAttribute('download', 'data.json');
+  };
+  const likeAndSave = async save => {
+    if (!token) return setLogin(true);
+    try {
+      setLoader(true);
+      const api = save ? 'save' : 'like';
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `${window.backendUrl}api/user/${api}/${data._id}`,
+        headers: { token },
+        data: {},
+      };
+      const res = await axios.request(config);
+      console.log(res);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+    } catch (err) {
+      console.error(err);
+      const msg = err?.response?.data?.message || err.message;
+      toast.error(msg);
+    } finally {
+      setLoader(false);
+    }
+  };
+  const handelLike = async () => await likeAndSave(false);
+  const handelSave = async () => await likeAndSave(true);
   const handelLogin = () => setLogin(c => !c);
+  const downloadData = `data:text/json;charset=utf-8,${encodeURIComponent(
+    JSON.stringify(data)
+  )}`;
 
   const handlers = {
     handelClose,
-    handelDownload,
+    downloadData,
     handelLike,
     handelSave,
     handelNext,
   };
 
+  const bookmark = user?.bookmarks?.includes(data._id);
+  const like = user?.liked?.includes(data._id);
+
   return (
     <>
       {login && (
         <Modal text='Login first!' close={handelLogin}>
-          <LoginAndRegister auth='login' />
+          <LoginAndRegister auth='login' closeModal={handelLogin} />
         </Modal>
       )}
       <div className={style.storyBg}>
@@ -55,15 +76,17 @@ function Story({ id, handelClose }) {
         </div>
 
         <StoryBox
-          data={story[num]}
-          length={story.length}
+          data={cards[num]}
+          length={length}
           num={num}
+          id={data._id}
           handlers={handlers}
           key={num}
-          id={id}
+          bookmark={bookmark}
+          like={like}
         />
 
-        {num === story.length - 1 ? (
+        {num === length - 1 ? (
           <div className={style.next} onClick={() => setNum(0)}>
             <img src='/img/replay.png' width='60px' alt='next' />{' '}
           </div>
@@ -77,17 +100,28 @@ function Story({ id, handelClose }) {
   );
 }
 
-function StoryBox({ data, length, num, id, handlers }) {
-  const { handelClose, handelDownload, handelLike, handelSave, handelNext } =
+function StoryBox({ data, length, num, id, handlers, bookmark, like }) {
+  const { handelClose, downloadData, handelLike, handelSave, handelNext } =
     handlers;
-  const { heading, desc, image } = data;
+  const { heading, description, image } = data;
   const [time, setTime] = useState(0);
   const [copy, setCopy] = useState(false);
 
   const handelShare = () => {
-    navigator.clipboard.writeText(`link copies......${id}`);
-    setCopy('Link copied to clipboard');
+    navigator.clipboard.writeText(window.fontendUrl + id);
+    setMessage('Link copied to clipboard');
+  };
+  const setMessage = msg => {
+    setCopy(msg);
     setTimeout(() => setCopy(false), 3000);
+  };
+  const likeH = () => {
+    setMessage('Liked...');
+    handelLike();
+  };
+  const saveH = () => {
+    setMessage('Saved...');
+    handelSave();
   };
 
   useEffect(() => {
@@ -101,12 +135,13 @@ function StoryBox({ data, length, num, id, handlers }) {
     return () => clearInterval(intervalId);
   }, [time]);
 
-  const styles = { backgroundImage: `url(${image})` };
+  const styles = { backgroundImage: `url(${image}), url('/img/error.jpg')` };
+
   return (
     <div className={style.storyBox} style={styles}>
       <div className={style.storyCardBlank}>
         <div className={style.bars}>
-          {story.map((c, i) => (
+          {Array.from({ length }).map((c, i) => (
             <Bar key={i} num={num} i={i} length={length} time={time} />
           ))}
         </div>
@@ -122,17 +157,30 @@ function StoryBox({ data, length, num, id, handlers }) {
       <div className={style.storyCardTexts}>
         {copy && <button className={style.copy}>{copy}</button>}
         <h1>{heading}</h1>
-        <p>{desc}</p>
+        <p>{description}</p>
         <div className={style.icons}>
-          <div onClick={handelSave}>
-            <img src='/img/icons/save.png' alt='save' />
-          </div>
-          <div onClick={handelDownload}>
+          {bookmark ? (
+            <div>
+              <img src='/img/icons/saved.png' alt='save' />{' '}
+            </div>
+          ) : (
+            <div onClick={saveH}>
+              <img src='/img/icons/save.png' alt='save' />{' '}
+            </div>
+          )}
+          <a href={downloadData} download={`${id}.json`}>
             <img src='/img/icons/download.png' width='30px' alt='like' />
-          </div>
-          <div onClick={handelLike}>
-            <img src='/img/icons/like.png' alt='like' />
-          </div>
+          </a>
+
+          {like ? (
+            <div>
+              <img src='/img/icons/liked.png' alt='like' />
+            </div>
+          ) : (
+            <div onClick={likeH}>
+              <img src='/img/icons/like.png' alt='like' />
+            </div>
+          )}
         </div>
       </div>
     </div>

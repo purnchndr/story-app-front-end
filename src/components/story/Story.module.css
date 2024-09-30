@@ -103,3 +103,26 @@
   color: red;
   margin: 5px 0;
 }
+
+@media screen and (max-width: 450px) {
+  .pre,
+  .next {
+    position: fixed;
+    width: 35%;
+    height: 40%;
+  }
+  .pre {
+    left: 0;
+  }
+  .next {
+    right: 0;
+  }
+  .storyBox {
+    /* height: 630px; */
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+  }
+}
